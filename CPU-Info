@@ -1,6 +1,8 @@
 import platform, psutil
 def cpu_mem_info():
   print('CPU : ' + platform.processor())
-  print('CPU Core Count : ' + psutil.cpu_count())
-  print('CPU Frequency : ' + psutil.cpu_freq())
-  print('Current CPU Usage : ' + psutil.cpu_percent())
+  print('CPU Core Count : ' + str(psutil.cpu_count()))
+  print('CPU Frequency in Megahertz: ' + str(psutil.cpu_freq()[0]))
+  print('Current CPU Usage : %' + str(psutil.cpu_percent())
+
+cpu_mem_info()
