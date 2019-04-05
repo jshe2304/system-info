@@ -1,8 +1,25 @@
-import platform, psutil
-def cpu_mem_info():
-  print('CPU : ' + platform.processor())
-  print('CPU Core Count : ' + str(psutil.cpu_count()))
-  print('CPU Frequency in Megahertz: ' + str(psutil.cpu_freq()[0]))
-  print('Current CPU Usage : %' + str(psutil.cpu_percent()))
+import platform, psutil, time
 
-cpu_mem_info()
+def cpu_mem_info(session, delay):
+  print('CPU AND RAM INFO')
+  print('________________')
+  print('CPU : ' + platform.processor())
+  print('CPU Physical Core Count : ' + str(psutil.cpu_count(logical=False)))
+  print('CPU Logical Core Count : ' + str(psutil.cpu_count(logical=True)))
+  print('CPU Frequency in Megahertz: ' + str(psutil.cpu_freq()[0]))
+  print('RAM Amount : ' + str(psutil.virtual_memory()[0]) + ' bytes')
+  print(' ')
+  print('STATISTICS')
+  print('________________')
+  for sec in range(int(session/delay)):
+    print('CPU Usage On All Cores : ' + str(psutil.cpu_percent(interval=1, percpu=True)))
+    if platform.uname()[0] == 'Linux' or platform.uname()[0] == 'FreeBSD':
+      for core in psutil.sensors_temperatures()[-1][2:]:
+        print(str(core[0][7:-1]) + ' : ' + str(core[1]))
+    else:
+      print('No CPU Temperatures Available')
+    print('RAM Usage : %' + str(psutil.virtual_memory()[2]))
+    print(' ')
+    time.sleep(delay)
+
+cpu_mem_info(30, 5)
