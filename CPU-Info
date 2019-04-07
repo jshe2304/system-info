@@ -1,11 +1,16 @@
-import platform, psutil, time
+import platform, psutil, time, argparse
 
-def cpu_mem_info(session, delay):
+def cpu_mem_info(session, delay, coretype):
   print('CPU AND RAM INFO')
   print('________________')
   print('CPU : ' + platform.processor())
-  print('CPU Physical Core Count : ' + str(psutil.cpu_count(logical=False)))
-  print('CPU Logical Core Count : ' + str(psutil.cpu_count(logical=True)))
+  if coretype == 'physical':
+    print('CPU Physical Core Count : ' + str(psutil.cpu_count(logical=False)))
+  elif coretype == 'logical':
+    print('CPU Logical Core Count : ' + str(psutil.cpu_count(logical=True)))
+  elif coretype == 'both':
+    print('CPU Physical Core Count : ' + str(psutil.cpu_count(logical=False)))
+    print('CPU Logical Core Count : ' + str(psutil.cpu_count(logical=True)))
   print('CPU Frequency in Megahertz: ' + str(psutil.cpu_freq()[0]))
   print('RAM Amount : ' + str(psutil.virtual_memory()[0]) + ' bytes')
   print(' ')
@@ -22,4 +27,21 @@ def cpu_mem_info(session, delay):
     print(' ')
     time.sleep(delay)
 
-cpu_mem_info(30, 5)
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser(description = 'Command Line Interface')
+  parser.add_argument('--session', default = 25,
+                      help = 'How long do you want the program to run in seconds?',
+                      type = int)
+  parser.add_argument('--delay', default = 5,
+                      help = 'How much time do you want between outputs in seconds?',
+                      type = int)
+  parser.add_argument('--coretype', default = 'both',
+                      help = 'What type of CPU core would you like to see? type logical, physical, or both',
+                      type = str)
+  #parser.add_argument('--help', help="print usage")
+
+  try:
+    args = parser.parse_args()
+    cpu_mem_info(args.session, args.delay, args.coretype)
+  except:
+    parser.print_help()
